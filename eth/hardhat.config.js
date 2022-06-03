@@ -20,7 +20,7 @@ module.exports = {
   solidity: "0.8.4",
   networks: {
     rinkeby: {
-      url: "https://rinkeby.infura.io/v3/4ec5863c2b40428f9c74792776077dd3", //Infura url with projectId
+      url: "https://rinkeby.infura.io/v3/2cb56836f8854a79ab9e7d79f6c2b001", //Infura url with projectId
       accounts: ["db0078e71dc0671049d5a7c74e810b6d6be126267afab3a6701efeefbd3e7cff"] // add the account that will deploy the contract (private key)
      },
    }

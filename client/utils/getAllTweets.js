@@ -1,7 +1,15 @@
-import profile from "../abi/profile";
+import Profile from "../abi/Profile";
 import Tweet from "../abi/Tweet";
 
-const getAllTweets = async () => {
+const getAllTweets = async (address) => {
+  if(!address){
+    return [];
+  }
+
+  console.log("addr: ", address);
+
+  const profile = Profile(address)
+
     const tweetsLength = await profile.getTweetsLength();
 
       const tweetsAddresses = [];
@@ -17,6 +25,7 @@ const getAllTweets = async () => {
           const time = await tweet.time();
           tweets.push({text, time});
       }
+      console.log(tweets)
       return tweets.reverse();
 }
 

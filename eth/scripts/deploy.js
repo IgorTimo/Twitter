@@ -11,12 +11,12 @@ async function main() {
 
   console.log("Deploying contracts with the account:", deployer.address); 
   
-  const Greeter = await hre.ethers.getContractFactory("Profile");
+  const Greeter = await hre.ethers.getContractFactory("Twitter");
   const greeter = await Greeter.deploy();
 
   await greeter.deployed();
 
-  console.log("Profile deployed to:", greeter.address);
+  console.log("Twitter deployed to:", greeter.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
