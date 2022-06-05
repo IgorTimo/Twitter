@@ -18,12 +18,31 @@ const Index = () => {
 
   const renderTweets = tweets.map((tweet, index) => {
     const time = new Date(tweet.time * 1000);
+
+    const handleRetweetClick = async () => {
+      try {
+        const signer = provider.getSigner();
+        const account = await signer.getAddress();
+        const twitterWithSinger = twitter.connect(signer);
+        const profileAddress = await twitterWithSinger.usersToProfiles(account);
+        const profile = Profile(profileAddress);
+        const profileWithSigner = profile.connect(signer);
+        await profileWithSigner.retweet(tweet.address);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     return (
       <div key={index}>
         <h3>{tweet.text}</h3>
         <span>{time.toLocaleDateString()}</span>
         <br />
         <span>{time.toLocaleTimeString()}</span>
+        <br />
+        {tweet.owner !== userRef?.current.value && <span>Retweet from {tweet.owner}</span>}
+        <br />
+        <button onClick={handleRetweetClick}>Retweet</button>
       </div>
     );
   });
@@ -31,11 +50,13 @@ const Index = () => {
   const handleChangeProfileSubmit = async (event) => {
     event.preventDefault();
     try {
-      const profileAddress = await twitter.usersToProfiles(userRef.current.value);
+      const profileAddress = await twitter.usersToProfiles(
+        userRef.current.value
+      );
       console.log("profileAddress:", profileAddress);
       setProfileAddress(profileAddress);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
 
@@ -48,21 +69,21 @@ const Index = () => {
       const response = await tx.wait();
       console.log("response: ", response);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const handleCreateTweetSubmit = async (event) => {
     event.preventDefault();
     try {
-      if(!profileAddress){
-        throw new Error("no current address!")
+      if (!profileAddress) {
+        throw new Error("no current address!");
       }
       const profile = Profile(profileAddress);
       console.log("func: ", profile.functions);
       const signer = provider.getSigner();
       const profileWithSigner = profile.connect(signer);
-      console.log("tweetRef.current.value ", tweetRef.current.value)
+      console.log("tweetRef.current.value ", tweetRef.current.value);
       const tx = await profileWithSigner.createTweet(tweetRef.current.value);
       console.log("tx: ", tx);
       const response = await tx.wait();
@@ -79,7 +100,9 @@ const Index = () => {
         <label htmlFor="tweet"></label>
         <input ref={userRef} name="tweet" type="text" />
         <input type="submit" value="Show profile!" />
-        <button type="button" onClick={handleCreateProfileClick}>Create profile</button>
+        <button type="button" onClick={handleCreateProfileClick}>
+          Create profile
+        </button>
       </form>
       <hr />
       <form onSubmit={handleCreateTweetSubmit}>

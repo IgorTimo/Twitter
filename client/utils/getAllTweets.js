@@ -21,9 +21,10 @@ const getAllTweets = async (address) => {
       const tweets = [];
       for(let i = 0; i < tweetsAddresses.length; i++) {
           const tweet = Tweet(tweetsAddresses[i]);
+          const owner = await tweet.owner();
           const text = await tweet.text();
           const time = await tweet.time();
-          tweets.push({text, time});
+          tweets.push({address:tweetsAddresses[i], owner, text, time});
       }
       console.log(tweets)
       return tweets.reverse();
